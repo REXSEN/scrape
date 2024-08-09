@@ -1,0 +1,84 @@
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+Product_name =[]
+Description =[]
+Image=[]
+
+
+
+
+url = ""
+# try:
+#     while True:
+r = requests.get(url)
+soup = BeautifulSoup(r.text, "lxml")
+
+#         next_page = soup.find("li", class_="next")
+#         if next_page:
+#             next_link = next_page.find("a")
+#             if next_link:
+#                 np = next_link.get("href")
+#                 cnp = "https://.com" + np
+#                 print(cnp)
+
+#                 # Add a break here
+#                 print()
+
+#                 url = cnp
+#             else:
+#                 print("No anchor tag found inside the 'next' list item.")
+#                 break
+#         else:
+#             print("No 'next' list item found.")
+#             break
+
+# except KeyboardInterrupt:
+#     print("\nScript interrupted by user. Exiting...")
+
+
+
+names = soup.find_all("div", class_="h2")
+for i in names:
+  name = i.text
+  Product_name.append(name)
+
+# print(Product_name)
+
+
+des = soup.find_all("div", class_="description")
+for i in des:
+    des = i.text
+    Description.append(des)
+
+des = soup.find_all("ul", class_="bullet")
+for i in des:
+    for li in i.find_all("li"):
+        des = li.text
+        Description.append(des)
+
+# print(Description)
+
+
+img_links = soup.find_all("div", class_="image")
+
+Image = []
+for img_link in img_links:
+    img_href = f"https://www.pce-instruments.com{img_link.find('a').get('href')}"
+    Image.append(img_href)
+
+# print(Image)
+
+
+max_length = max(len(Product_name), len(Description), len(Image))
+while len(Product_name) < max_length:
+    Product_name.append(None)
+while len(Description) < max_length:
+    Description.append(None)
+while len(Image) < max_length:
+    Image.append(None)
+
+df = pd.DataFrame({"Product Name": Product_name, "Description": Description, "ImageLink": Image})
+print(df)
+
+df.to_csv("PCE_Air_qualitymeter1.csv", index=False)
