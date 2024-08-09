@@ -7,8 +7,8 @@ Image=[]
 
 
 
-
-url = ""
+# add your url here
+url = " "
 # try:
 #     while True:
 r = requests.get(url)
@@ -19,6 +19,7 @@ soup = BeautifulSoup(r.text, "lxml")
 #             next_link = next_page.find("a")
 #             if next_link:
 #                 np = next_link.get("href")
+                  #add the website link href here
 #                 cnp = "https://.com" + np
 #                 print(cnp)
 
@@ -64,7 +65,7 @@ img_links = soup.find_all("div", class_="image")
 
 Image = []
 for img_link in img_links:
-    img_href = f"https://www.pce-instruments.com{img_link.find('a').get('href')}"
+    img_href = f"https://www.{img_link.find('a').get('href')}"
     Image.append(img_href)
 
 # print(Image)
@@ -81,4 +82,4 @@ while len(Image) < max_length:
 df = pd.DataFrame({"Product Name": Product_name, "Description": Description, "ImageLink": Image})
 print(df)
 
-df.to_csv("PCE_Air_qualitymeter1.csv", index=False)
+df.to_csv("yourfilename.csv", index=False)
